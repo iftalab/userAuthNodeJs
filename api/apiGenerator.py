@@ -2,14 +2,15 @@ import os
 
 #change this part as per your requierments 
 schemaFields=[
-    'name : String',
-    'url : String',
-    'hash : String'
+    'email : {type : String, required : true}',
+    'password :  {type : String, required : true}',
+    'fullName : String',
+    'imageUrl : String'
 ]
-desiredApiName = 'file'
+desiredApiName = 'user'
 
 #no need to change below codes
-schemaGenerationMatcher = "updated : {type : Date, default : Date.now},"
+schemaGenerationMatcher = "updated : {type : Date, default : Date.now()},"
 putMethodMatcher = "_id: mongoose.Types.ObjectId(),"
 sourceApiName = 'base'
 sourceModel = open(os.getcwd()+'\\v1\\model\\'+sourceApiName+'.js','r')

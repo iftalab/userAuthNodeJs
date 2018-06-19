@@ -64,7 +64,7 @@ router.get('/getByHash/:hash', function (req, res, next) {
         .exec()
         .then(result => {
             if (result) {
-                res.status(200).json(result);
+                res.status(201).json(result);
             } else {
                 res.status(404).json({ 'result': 'No valid object found for given ID' });
             }

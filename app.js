@@ -49,6 +49,8 @@ app.use(function (req, res, next) {
 });
 
 //route
+var userRouter = require('./api/v1/route/user');
+app.use('/api/v1/user', userRouter);
 var baseRouter = require('./api/v1/route/base');
 app.use('/api/v1/base', baseRouter);
 var fileRouter = require('./api/v1/route/file');

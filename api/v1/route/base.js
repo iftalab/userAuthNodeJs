@@ -34,13 +34,13 @@ router.get('/:baseId', function (req, res, next) {
 });
 
 //save
-router.put('/', function (req, res, next) {
+router.post('/', function (req, res, next) {
     const base = new Base({
         _id: mongoose.Types.ObjectId(),
     });
     base.save()
         .then(result => {
-            res.status(200).json(result)
+            res.status(201).json(result)
         }).catch(err => {
             res.status(500).json({ error: err })
         });
