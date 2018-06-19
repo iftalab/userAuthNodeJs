@@ -6,7 +6,7 @@ schemaFields=[
     'url : String',
     'hash : String'
 ]
-desiredApiName = 'files'
+desiredApiName = 'file'
 
 #no need to change below codes
 schemaGenerationMatcher = "updated : {type : Date, default : Date.now},"

@@ -47,10 +47,12 @@ app.use(function (req, res, next) {
     }
     next();
 });
+
 //route
-//####
 var baseRouter = require('./api/v1/route/base');
 app.use('/api/v1/base', baseRouter);
+var fileRouter = require('./api/v1/route/file');
+app.use('/api/v1/file', fileRouter);
 
 
 //error handling
