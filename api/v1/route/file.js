@@ -19,7 +19,7 @@ const fileFilter = (req,file,cb) => {
     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
         cb(null,true);
     }else{
-        cb(new Error('Unsupported file format. We accept jpeg and png files'),false);
+        cb(new Error('Unsupported file format. We accept jpeg and png files only'),false);
     }
 }
 const upload = multer({
@@ -81,7 +81,7 @@ router.post('/', upload.single('file'), function (req, res, next) {
         _id: mongoose.Types.ObjectId(),
         nameServer: req.file.filename,
         nameOriginal: req.file.originalname,
-        url: req.file.path,
+        url: req.file.path.replace('\\','/'),
         hash: md5Hasher.sync(req.file.path),
         caption: req.body.caption
     });
