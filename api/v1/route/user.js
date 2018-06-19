@@ -36,26 +36,33 @@ router.get('/:userId', function (req, res, next) {
 
 //save
 router.post('/signUp', function (req, res, next) {
-    bcrypt.hash(req.body.password, 12, (err, hash) => {
-        if (err) {
-            res.status(500).json({ error: err })
-         } else {
-            const user = new User({
-                _id: mongoose.Types.ObjectId(),
-                email: req.body.email,
-                password: hash,
-                fullName: req.body.fullName,
-                imageUrl: req.body.imageUrl
-            });
-            user.save()
-                .then(result => {
-                    res.status(201).json({ message: "User created" })
-                }).catch(err => {
-                    res.status(500).json({ error: err })
+    User.find({ email: req.body.email })
+        .exec()
+        .then(users => {
+            if (users.length >= 1) {
+                return res.status(409).json({ message: "Email already exists" });
+            } else {
+                bcrypt.hash(req.body.password, 12, (err, hash) => {
+                    if (err) {
+                        res.status(500).json({ error: err })
+                    } else {
+                        const user = new User({
+                            _id: mongoose.Types.ObjectId(),
+                            email: req.body.email,
+                            password: hash,
+                            fullName: req.body.fullName,
+                            imageUrl: req.body.imageUrl
+                        });
+                        user.save()
+                            .then(result => {
+                                res.status(201).json({ message: "User created" })
+                            }).catch(err => {
+                                res.status(500).json({ error: err })
+                            });
+                    }
                 });
-        }
-    });
-
+            }
+        });
 });
 
 //update
