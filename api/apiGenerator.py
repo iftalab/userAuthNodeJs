@@ -3,14 +3,10 @@ import os
 #change this part as per your requierments 
 schemaFields=[
     'name : String',
-    'phone : String',
-    'username : String',
-    'password : String',
-    'email : String',
-    'userType : String',
-    'factoryName : String',
+    'url : String',
+    'hash : String'
 ]
-desiredApiName = 'user'
+desiredApiName = 'files'
 
 #no need to change below codes
 schemaGenerationMatcher = "updated : {type : Date, default : Date.now},"
@@ -39,7 +35,7 @@ for line in lines:
     resultRoute.write(line+'\n')
     if(line.endswith(putMethodMatcher)):
        for field in schemaFields:
-           fieldName = field.split(" : ")[0];
+           fieldName = field.split(" : ")[0]
            resultRoute.write('\t\t'+fieldName+' : req.body.'+fieldName+',\n')
 
 
@@ -47,4 +43,3 @@ for line in lines:
 
 sourceRoute.close()
 resultRoute.close()
-print 'done'
