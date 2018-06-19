@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-
 var connection = require('./dbHelper');
 //database : mysql local
 // global.db = connection.dbConnection();

@@ -4,16 +4,31 @@ const File = require('../model/file');
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
+const md5Hasher = require('md5-file');
+
 const multer = require('multer');
 var storage = multer.diskStorage({
     destination: function (request, file, callback) {
         callback(null, './uploads/');
     },
     filename: function (request, file, callback) {
-        callback(null, Date.now()+file.originalname)
+        callback(null, Date.now() + file.originalname)
     }
 });
-const upload =  multer({ storage: storage });
+const fileFilter = (req,file,cb) => {
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null,true);
+    }else{
+        cb(new Error('Unsupported file format. We accept jpeg and png files'),false);
+    }
+}
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize : 10 * 1024 * 1024
+    },
+    fileFilter : fileFilter
+});
 
 //get all
 router.get('/', function (req, res, next) {
@@ -42,6 +57,22 @@ router.get('/:fileId', function (req, res, next) {
             res.status(500).json({ error: err })
         });
 });
+//check
+router.get('/getByHash/:hash', function (req, res, next) {
+    const hash = req.params.hash;
+    File.find({ hash: hash })
+        .exec()
+        .then(result => {
+            if (result) {
+                res.status(200).json(result);
+            } else {
+                res.status(404).json({ 'result': 'No valid object found for given ID' });
+            }
+
+        }).catch(err => {
+            res.status(500).json({ error: err })
+        });
+});
 
 //save
 router.post('/', upload.single('file'), function (req, res, next) {
@@ -49,10 +80,10 @@ router.post('/', upload.single('file'), function (req, res, next) {
     const file = new File({
         _id: mongoose.Types.ObjectId(),
         nameServer: req.file.filename,
-        nameOriginal : req.file.originalname,
+        nameOriginal: req.file.originalname,
         url: req.file.path,
-        hash: "hashToGenerate",
-        caption : req.body.caption
+        hash: md5Hasher.sync(req.file.path),
+        caption: req.body.caption
     });
     file.save()
         .then(result => {
