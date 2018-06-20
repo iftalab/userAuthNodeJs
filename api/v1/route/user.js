@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../model/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 mongoose.Promise = global.Promise;
 
 
@@ -76,7 +77,18 @@ router.post('/login', function (req, res, next) {
                         return res.status(401).json({ message: "Authentication failed!" });
                     }
                     if (result) {
-                        return res.status(200).json({ message: "Authentication successful!" });
+                        const token = jwt.sign({
+                            email: users[0].email,
+                            id: users[0]._id
+                        }, 
+                        global.jwtPrivateKey,
+                        {
+                            expiresIn: "1h"
+                        });
+                        return res.status(200).json({
+                            message: "Authentication successful!",
+                            token: token
+                        });
                     }
                     return res.status(401).json({ message: "Authentication failed!" });
                 });

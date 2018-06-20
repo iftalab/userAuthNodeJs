@@ -25,6 +25,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 var connection = require('./dbHelper');
+var environment = require('./environment');
+environment.setupEnvironemnt();
 //database : mysql local
 // global.db = connection.dbConnection();
 

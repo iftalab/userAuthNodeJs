@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const File = require('../model/file');
 const mongoose = require('mongoose');
+const checkAuth = require('../../../middleware/checkAuth');
 mongoose.Promise = global.Promise;
 
 const md5Hasher = require('md5-file');
@@ -75,7 +76,7 @@ router.get('/getByHash/:hash', function (req, res, next) {
 });
 
 //save
-router.post('/', upload.single('file'), function (req, res, next) {
+router.post('/', checkAuth,upload.single('file'), function (req, res, next) {
     console.log(req.file);
     const file = new File({
         _id: mongoose.Types.ObjectId(),
