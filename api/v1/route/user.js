@@ -65,6 +65,30 @@ router.post('/signUp', function (req, res, next) {
         });
 });
 
+//login
+router.post('/login', function (req, res, next) {
+    User.find({ email: req.body.email })
+        .exec()
+        .then(users => {
+            if (users.length >= 1) {
+                bcrypt.compare(req.body.password, users[0].password, (err, result) => {
+                    if (err) {
+                        return res.status(401).json({ message: "Authentication failed!" });
+                    }
+                    if (result) {
+                        return res.status(200).json({ message: "Authentication successful!" });
+                    }
+                    return res.status(401).json({ message: "Authentication failed!" });
+                });
+            } else {
+                return res.status(401).json({ message: "Authentication failed!" });
+            }
+        })
+        .catch(err => {
+            return res.status(401).json({ message: "Authentication failed!" });
+        });
+});
+
 //update
 router.patch('/:userId', function (req, res, next) {
     const id = req.params.userId;
